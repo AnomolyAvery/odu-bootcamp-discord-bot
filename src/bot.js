@@ -11,6 +11,9 @@ class Bot {
         });
     }
 
+    /**
+     * Initialize the commands collection + load the commands & events
+     */
     init() {
         this.client.commands = new Discord.Collection();
 
@@ -18,32 +21,45 @@ class Bot {
         this.loadEvents();
     }
 
-    async login() {
+    /**
+     *  Starts the bot
+     *
+     * @returns {Promise<void>}
+     */
+    async start() {
         return await this.client.login(this.token);
     }
 
+    /**
+     * Load all event handlers from the events directory
+     */
     loadEvents() {
         const eventsDir = path.join(__dirname, 'events');
 
-        fs.readdirSync(eventsDir)
-            .filter((file) => file.endsWith('.js'))
-            .forEach((file) => {
-                const event = require(path.join(eventsDir, file));
+        const files = fs
+            .readdirSync(eventsDir)
+            .filter((f) => f.endsWith('.js'));
 
-                this.client.on(event.name, event.handler.bind(null, this));
-            });
+        files.forEach((file) => {
+            const event = require(path.join(eventsDir, file));
+
+            this.client.on(event.name, event.handler.bind(null, this));
+        });
     }
 
+    /**
+     * Load all commands from the commands directory
+     */
     loadCommands() {
         const commandsDir = path.join(__dirname, 'commands');
 
-        fs.readdirSync(commandsDir)
-            .filter((file) => file.endsWith('.js'))
-            .forEach((file) => {
-                const command = require(path.join(commandsDir, file));
-                console.log(`Loading command: ${command.name}`);
-                this.client.commands.set(command.name, command);
-            });
+        const files = fs.readdirSync('files').filter((f) => f.endsWith('.js'));
+
+        files.forEach((file) => {
+            const command = require(path.join(commandsDir, file));
+            console.log(`Loading command: ${command.name}`);
+            this.client.commands.set(command.name, command);
+        });
     }
 }
 

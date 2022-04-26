@@ -12,5 +12,5 @@ const config = require('./config');
 
     bot.init();
 
-    bot.login();
+    await bot.start();
 })();
