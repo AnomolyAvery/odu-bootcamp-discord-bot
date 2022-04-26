@@ -53,7 +53,9 @@ class Bot {
     loadCommands() {
         const commandsDir = path.join(__dirname, 'commands');
 
-        const files = fs.readdirSync('files').filter((f) => f.endsWith('.js'));
+        const files = fs
+            .readdirSync(commandsDir)
+            .filter((f) => f.endsWith('.js'));
 
         files.forEach((file) => {
             const command = require(path.join(commandsDir, file));
